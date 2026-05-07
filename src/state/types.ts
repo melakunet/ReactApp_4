@@ -11,7 +11,8 @@ export type Book = {
   author: string;
   votes: number;       // starts at 0, goes up or down as users vote
   description: string; // one-sentence summary shown on hover
-  coverColor: string;  // gradient used to draw the book cover
+  coverColor: string;  // fallback gradient if the cover image fails to load
+  isbn: string;        // used to fetch the real cover from Open Library
 };
 
 /**

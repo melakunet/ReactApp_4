@@ -20,6 +20,7 @@ const initialBooks: Book[] = [
     votes: 0,
     description: 'A guide to writing readable, maintainable code that your teammates will thank you for.',
     coverColor: 'linear-gradient(135deg, #1a1a2e, #e94560)',
+    isbn: '9780132350884',
   },
   {
     id: '2',
@@ -28,6 +29,7 @@ const initialBooks: Book[] = [
     votes: 0,
     description: 'Timeless advice on becoming a more effective and adaptable software developer.',
     coverColor: 'linear-gradient(135deg, #0f3460, #533483)',
+    isbn: '9780135957059',
   },
   {
     id: '3',
@@ -36,6 +38,7 @@ const initialBooks: Book[] = [
     votes: 0,
     description: 'A deep dive into the JavaScript language that challenges what you think you already know.',
     coverColor: 'linear-gradient(135deg, #f7971e, #ffd200)',
+    isbn: '9781491904244',
   },
   {
     id: '4',
@@ -44,6 +47,7 @@ const initialBooks: Book[] = [
     votes: 0,
     description: 'A modern introduction to JavaScript programming with a focus on writing elegant code.',
     coverColor: 'linear-gradient(135deg, #134e5e, #71b280)',
+    isbn: '9781593279509',
   },
   {
     id: '5',
@@ -52,6 +56,7 @@ const initialBooks: Book[] = [
     votes: 0,
     description: 'The definitive book on improving the design of existing code without changing its behaviour.',
     coverColor: 'linear-gradient(135deg, #373b44, #4286f4)',
+    isbn: '9780134757599',
   },
   {
     id: '6',
@@ -60,6 +65,7 @@ const initialBooks: Book[] = [
     votes: 0,
     description: 'The classic catalogue of 23 reusable solutions to common software design problems.',
     coverColor: 'linear-gradient(135deg, #c94b4b, #4b134f)',
+    isbn: '9780201633610',
   },
   {
     id: '7',
@@ -68,6 +74,7 @@ const initialBooks: Book[] = [
     votes: 0,
     description: 'A practical guide to finding and exploiting security flaws in web applications.',
     coverColor: 'linear-gradient(135deg, #141e30, #243b55)',
+    isbn: '9781118026472',
   },
   {
     id: '8',
@@ -76,6 +83,7 @@ const initialBooks: Book[] = [
     votes: 0,
     description: 'Distills JavaScript down to the elegant, reliable subset that every developer should master.',
     coverColor: 'linear-gradient(135deg, #f953c6, #b91d73)',
+    isbn: '9780596517748',
   },
   {
     id: '9',
@@ -84,6 +92,7 @@ const initialBooks: Book[] = [
     votes: 0,
     description: 'The most thorough reference for CSS, covering layout, animation, and modern design techniques.',
     coverColor: 'linear-gradient(135deg, #11998e, #38ef7d)',
+    isbn: '9781449393199',
   },
   {
     id: '10',
@@ -92,6 +101,7 @@ const initialBooks: Book[] = [
     votes: 0,
     description: 'A hands-on guide to building modern UIs with React, hooks, and the component model.',
     coverColor: 'linear-gradient(135deg, #0052d4, #4364f7)',
+    isbn: '9781492051725',
   },
   {
     id: '11',
@@ -100,6 +110,7 @@ const initialBooks: Book[] = [
     votes: 0,
     description: 'Goes beyond the basics of TypeScript to help you write safer, more scalable applications.',
     coverColor: 'linear-gradient(135deg, #3a7bd5, #00d2ff)',
+    isbn: '9781484244517',
   },
   {
     id: '12',
@@ -108,6 +119,7 @@ const initialBooks: Book[] = [
     votes: 0,
     description: 'Teaches proven patterns for writing efficient, scalable back-end applications with Node.js.',
     coverColor: 'linear-gradient(135deg, #56ab2f, #a8e063)',
+    isbn: '9781839214110',
   },
 ];
 

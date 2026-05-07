@@ -26,11 +26,11 @@ beforeEach(() => {
   // Put all votes back to 0 between tests
   useVoteStore.setState({
     books: [
-      { id: '1', title: 'Clean Code', author: 'Robert C. Martin', votes: 0, description: 'A guide to writing clean code.', coverColor: 'linear-gradient(135deg, #1a1a2e, #e94560)' },
-      { id: '2', title: 'The Pragmatic Programmer', author: 'David Thomas', votes: 0, description: 'Timeless advice for developers.', coverColor: 'linear-gradient(135deg, #0f3460, #533483)' },
-      { id: '3', title: "You Don't Know JS", author: 'Kyle Simpson', votes: 0, description: 'A deep dive into JavaScript.', coverColor: 'linear-gradient(135deg, #f7971e, #ffd200)' },
-      { id: '4', title: 'Eloquent JavaScript', author: 'Marijn Haverbeke', votes: 0, description: 'Modern intro to JavaScript.', coverColor: 'linear-gradient(135deg, #134e5e, #71b280)' },
-      { id: '5', title: 'Refactoring', author: 'Martin Fowler', votes: 0, description: 'Improving existing code design.', coverColor: 'linear-gradient(135deg, #373b44, #4286f4)' },
+      { id: '1', title: 'Clean Code', author: 'Robert C. Martin', votes: 0, description: 'A guide to writing clean code.', coverColor: 'linear-gradient(135deg, #1a1a2e, #e94560)', isbn: '9780132350884' },
+      { id: '2', title: 'The Pragmatic Programmer', author: 'David Thomas', votes: 0, description: 'Timeless advice for developers.', coverColor: 'linear-gradient(135deg, #0f3460, #533483)', isbn: '9780135957059' },
+      { id: '3', title: "You Don't Know JS", author: 'Kyle Simpson', votes: 0, description: 'A deep dive into JavaScript.', coverColor: 'linear-gradient(135deg, #f7971e, #ffd200)', isbn: '9781491904244' },
+      { id: '4', title: 'Eloquent JavaScript', author: 'Marijn Haverbeke', votes: 0, description: 'Modern intro to JavaScript.', coverColor: 'linear-gradient(135deg, #134e5e, #71b280)', isbn: '9781593279509' },
+      { id: '5', title: 'Refactoring', author: 'Martin Fowler', votes: 0, description: 'Improving existing code design.', coverColor: 'linear-gradient(135deg, #373b44, #4286f4)', isbn: '9780134757599' },
     ],
   });
 });
@@ -43,6 +43,7 @@ const testBook: Book = {
   votes: 0,
   description: 'A guide to writing clean, readable code.',
   coverColor: 'linear-gradient(135deg, #1a1a2e, #e94560)',
+  isbn: '9780132350884',
 };
 
 // Test 1 — title shows up
@@ -118,6 +119,7 @@ test('VoteCard renders correctly with a different book', () => {
     votes: 5,
     description: 'A modern introduction to JavaScript programming.',
     coverColor: 'linear-gradient(135deg, #134e5e, #71b280)',
+    isbn: '9781593279509',
   };
 
   render(<VoteCard book={anotherBook} rank={4} />);

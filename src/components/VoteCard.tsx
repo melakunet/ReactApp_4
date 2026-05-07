@@ -9,6 +9,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useVoteStore } from '@/state/useVoteStore';
 import type { Book } from '@/state/types';
 
@@ -33,6 +34,9 @@ function getRankBadge(rank: number): string {
 export function VoteCard({ book, rank }: VoteCardProps) {
   const upvote   = useVoteStore((state) => state.upvote);
   const downvote = useVoteStore((state) => state.downvote);
+
+  // Track whether the image failed to load so we fall back to the gradient
+  const [imgError, setImgError] = useState(false);
 
   // Track whether the mouse is over this card to show the description
   const [hovered, setHovered] = useState(false);
@@ -65,7 +69,22 @@ export function VoteCard({ book, rank }: VoteCardProps) {
       onMouseLeave={() => setHovered(false)}
     >
       {/* ── Book cover ── */}
-      <div style={{ ...styles.cover, background: book.coverColor }}>
+      <div style={{
+        ...styles.cover,
+        background: imgError ? book.coverColor : undefined,
+      }}>
+
+        {/* Real cover image from Open Library — falls back to gradient if load fails */}
+        {!imgError && (
+          <Image
+            src={`https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`}
+            alt={`Cover of ${book.title}`}
+            fill
+            style={{ objectFit: 'cover' }}
+            onError={() => setImgError(true)}
+            sizes="(max-width: 600px) 100vw, 220px"
+          />
+        )}
 
         {/* Rank badge — top-left corner */}
         <span style={{
