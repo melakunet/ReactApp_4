@@ -15,8 +15,24 @@ import type { Book } from '@/state/types';
 
 type VoteCardProps = {
   book: Book;
-  rank: number; // position in the sorted leaderboard (1 = top)
+  rank: number;
 };
+
+/** One confetti particle */
+type Confetto = { id: number; x: string; color: string; dir: 'left' | 'right' | 'up' };
+
+const CONFETTI_COLORS = ['#ffd200', '#e94560', '#38ef7d', '#4364f7', '#f953c6', '#00d2ff'];
+const DIRS: Confetto['dir'][] = ['left', 'right', 'up'];
+
+/** Generate a small burst of coloured confetti particles */
+function makeConfetti(): Confetto[] {
+  return Array.from({ length: 12 }, (_, i) => ({
+    id: Date.now() + i,
+    x: `${10 + Math.random() * 80}%`,
+    color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+    dir: DIRS[i % 3],
+  }));
+}
 
 /** Medal emoji for the top 3 positions */
 function getRankBadge(rank: number): string {
@@ -35,24 +51,34 @@ export function VoteCard({ book, rank }: VoteCardProps) {
   const upvote   = useVoteStore((state) => state.upvote);
   const downvote = useVoteStore((state) => state.downvote);
 
-  // Track whether the image failed to load so we fall back to the gradient
-  const [imgError, setImgError] = useState(false);
+  const [imgError, setImgError]   = useState(false);
+  const [hovered, setHovered]     = useState(false);
+  const [pulse, setPulse]         = useState<'up' | 'down' | null>(null);
 
-  // Track whether the mouse is over this card to show the description
-  const [hovered, setHovered] = useState(false);
+  // Toast message shown briefly after each vote so the user knows it registered
+  const [toast, setToast]         = useState<string | null>(null);
 
-  // Track which button was last clicked so we can show a pulse animation
-  const [pulse, setPulse] = useState<'up' | 'down' | null>(null);
+  // Confetti particles: each has a unique key, colour, and random position/angle
+  const [confetti, setConfetti]   = useState<Confetto[]>([]);
 
-  // Run a quick pulse animation then clear it after 300ms
   function handleVote(type: 'up' | 'down') {
-    if (type === 'up') upvote(book.id);
-    else downvote(book.id);
+    if (type === 'up') {
+      upvote(book.id);
+      // Launch confetti burst
+      setConfetti(makeConfetti());
+      setTimeout(() => setConfetti([]), 900);
+      // Show toast
+      setToast('✓ Upvoted!');
+    } else {
+      downvote(book.id);
+      setToast('✓ Downvoted');
+    }
     setPulse(type);
     setTimeout(() => setPulse(null), 300);
+    setTimeout(() => setToast(null), 1200);
   }
 
-  const isTop = rank === 1; // used to add the glowing crown effect
+  const isTop = rank === 1;
 
   return (
     <div
@@ -95,7 +121,7 @@ export function VoteCard({ book, rank }: VoteCardProps) {
           {getRankBadge(rank)}
         </span>
 
-        {/* Book initials on the cover */}
+        {/* Book initials on the cover — only shown when no real image loaded */}
         <span style={styles.coverInitials}>
           {book.title.split(' ').slice(0, 2).map(w => w[0]).join('')}
         </span>
@@ -111,20 +137,52 @@ export function VoteCard({ book, rank }: VoteCardProps) {
       </div>
 
       {/* ── Card body ── */}
-      <div style={styles.body}>
+      <div style={{ ...styles.body, position: 'relative' }}>
+
+        {/* Toast notification — confirms the vote registered even if card re-sorts */}
+        {toast && (
+          <div style={{
+            ...styles.toast,
+            backgroundColor: pulse === 'up' ? '#38ef7d' : '#e94560',
+            color: pulse === 'up' ? '#000' : '#fff',
+          }}>
+            {toast}
+          </div>
+        )}
+
+        {/* Confetti particles — burst upward on upvote */}
+        {confetti.map((c) => (
+          <span key={c.id} style={{
+            position: 'absolute',
+            left: c.x,
+            bottom: '60px',
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            backgroundColor: c.color,
+            pointerEvents: 'none',
+            animation: `rise-${c.dir} 0.85s ease-out forwards`,
+            zIndex: 10,
+          }} />
+        ))}
+
+        {/* ── Keyframe styles injected once per card ── */}
+        <style>{`
+          @keyframes rise-left  { 0%{opacity:1;transform:translate(0,0) scale(1)}  100%{opacity:0;transform:translate(-28px,-60px) scale(0.3)} }
+          @keyframes rise-right { 0%{opacity:1;transform:translate(0,0) scale(1)}  100%{opacity:0;transform:translate(28px,-60px)  scale(0.3)} }
+          @keyframes rise-up    { 0%{opacity:1;transform:translate(0,0) scale(1)}  100%{opacity:0;transform:translate(0px,-70px)   scale(0.3)} }
+          @keyframes fadeUp     { 0%{opacity:1;transform:translateX(-50%) translateY(0)}  80%{opacity:1} 100%{opacity:0;transform:translateX(-50%) translateY(-20px)} }
+        `}</style>
 
         {/* Title */}
-        <h2 style={{
-          ...styles.title,
-          color: isTop ? '#ffd200' : '#e94560',
-        }}>
+        <h2 style={{ ...styles.title, color: isTop ? '#ffd200' : '#e94560' }}>
           {book.title}
         </h2>
 
         {/* Author */}
         <p style={styles.author}>by {book.author}</p>
 
-        {/* Vote count — pulses when voted */}
+        {/* Vote count — scales up briefly on vote */}
         <p
           data-testid="vote-count"
           style={{
@@ -262,5 +320,19 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 'bold',
     fontSize: '0.85rem',
     transition: 'background-color 0.15s ease, color 0.15s ease',
+  },
+  toast: {
+    position: 'absolute',
+    top: '-18px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    padding: '4px 14px',
+    borderRadius: '20px',
+    fontSize: '0.8rem',
+    fontWeight: 700,
+    whiteSpace: 'nowrap',
+    pointerEvents: 'none',
+    zIndex: 20,
+    animation: 'fadeUp 1.2s ease forwards',
   },
 };
