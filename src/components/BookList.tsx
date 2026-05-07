@@ -19,12 +19,17 @@ export function BookList() {
   // Subscribe to the books array in the global store
   const books = useVoteStore((state) => state.books);
 
+  // Sort here for display only — the store keeps the original stable order
+  // so cards don't jump position the moment you click a vote button,
+  // which was causing the vote feedback to appear on the wrong card.
+  const sorted = [...books].sort((a, b) => b.votes - a.votes);
+
   return (
     // Outer section fills the full page width with the dark background
     <section style={styles.page}>
       <main style={styles.grid}>
-        {/* Loop through books — index + 1 gives the rank (store keeps them sorted by votes) */}
-        {books.map((book, index) => (
+        {/* rank = position in the sorted leaderboard (1 = most votes) */}
+        {sorted.map((book, index) => (
           <VoteCard key={book.id} book={book} rank={index + 1} />
         ))}
       </main>

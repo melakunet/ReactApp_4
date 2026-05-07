@@ -15,8 +15,8 @@ export function Header() {
   // Sum all votes live — updates every time the books array changes
   const totalVotes = books.reduce((sum, book) => sum + book.votes, 0);
 
-  // The store keeps books sorted by votes, so index 0 is always the leader
-  const topBook = books[0];
+  // Find the leader by sorting a copy — store no longer keeps books pre-sorted
+  const topBook = [...books].sort((a, b) => b.votes - a.votes)[0];
 
   return (
     <header style={styles.header}>

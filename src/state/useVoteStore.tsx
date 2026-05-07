@@ -140,30 +140,27 @@ export const useVoteStore = create<VoteState>((set) => ({
   // ----- Actions -----
 
   /**
-   * upvote — adds one vote to the book that matches the given id.
-   * After updating, books are sorted so the highest-voted rises to the top.
+   * upvote — adds one vote to the book with the given id.
+   * The store keeps books in their original stable order — BookList
+   * sorts them for display so cards never jump position mid-click.
    */
   upvote: (id: string) =>
     set((state) => ({
-      books: state.books
-        .map((book) =>
-          book.id === id ? { ...book, votes: book.votes + 1 } : book,
-        )
-        .sort((a, b) => b.votes - a.votes), // re-sort after every vote
+      books: state.books.map((book) =>
+        book.id === id ? { ...book, votes: book.votes + 1 } : book,
+      ),
     })),
 
   /**
-   * downvote — removes one vote, but never goes below 0.
-   * Also re-sorts so the leaderboard stays accurate.
+   * downvote — removes one vote, but never below 0.
+   * Same stable-order approach as upvote.
    */
   downvote: (id: string) =>
     set((state) => ({
-      books: state.books
-        .map((book) =>
-          book.id === id
-            ? { ...book, votes: Math.max(0, book.votes - 1) }
-            : book,
-        )
-        .sort((a, b) => b.votes - a.votes), // re-sort after every vote
+      books: state.books.map((book) =>
+        book.id === id
+          ? { ...book, votes: Math.max(0, book.votes - 1) }
+          : book,
+      ),
     })),
 }));
