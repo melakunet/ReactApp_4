@@ -33,9 +33,11 @@ export function BookList() {
 const styles: Record<string, React.CSSProperties> = {
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-    gap: '24px',
-    padding: '32px',
+    // 200px min keeps cards narrow enough to show 4–5 per row on wide screens
+    // but they grow to fill space — each card will be portrait/book-shaped
+    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gap: '32px',
+    padding: '40px 36px',
     backgroundColor: '#0a0a1a',
     minHeight: 'calc(100vh - 72px)',
   },
