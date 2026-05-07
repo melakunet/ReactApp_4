@@ -46,8 +46,8 @@ const styles: Record<string, React.CSSProperties> = {
     gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 340px))',
     justifyContent: 'center',  // centre the rows instead of stretching to edges
     gap: '36px',
-    padding: '40px 36px',
-    maxWidth: '1500px',        // caps grid at ~4 comfortable columns on wide screens
-    margin: '0 auto',          // centre the grid on the page
+    padding: '36px 36px 48px',  // extra bottom padding before the footer
+    maxWidth: '1500px',
+    margin: '32px auto 0',      // 32px gap below the intro banner
   },
 };
