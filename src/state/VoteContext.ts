@@ -16,7 +16,6 @@ import type { VoteState } from './types';
  */
 export const VoteContext = createContext<VoteState>({
   books: [],
-  totalVotes: 0,
   upvote: () => {},   // empty default, will be replaced when context is used
   downvote: () => {}, // empty default
 });
