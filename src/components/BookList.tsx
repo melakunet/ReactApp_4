@@ -7,28 +7,49 @@
  */
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useVoteStore } from '@/state/useVoteStore';
 import { VoteCard } from './VoteCard';
+import type { Book } from '@/state/types';
 
 /**
  * BookList
- * Reads the books array from the store and maps over it.
- * Each book gets its own VoteCard using the book's id as the key.
+ * Renders one VoteCard per book.
+ *
+ * Key design decision — two separate concerns:
+ *   1. book DATA (votes, title, etc.) — taken live from the store so the
+ *      vote counter on each card updates the instant you click.
+ *   2. display ORDER (which card is in which grid slot) — updated after a
+ *      400ms delay so a card never jumps position mid-animation, which was
+ *      making the vote feedback appear on the wrong card.
  */
 export function BookList() {
-  // Subscribe to the books array in the global store
   const books = useVoteStore((state) => state.books);
 
-  // Sort here for display only — the store keeps the original stable order
-  // so cards don't jump position the moment you click a vote button,
-  // which was causing the vote feedback to appear on the wrong card.
-  const sorted = [...books].sort((a, b) => b.votes - a.votes);
+  // displayOrder holds book IDs in sorted order — updated with a short delay
+  // so cards finish their pulse animation before the grid reshuffles.
+  const sortedIds = (b: Book[]) =>
+    [...b].sort((a, b) => b.votes - a.votes).map((x) => x.id);
+
+  const [displayOrder, setDisplayOrder] = useState<string[]>(() => sortedIds(books));
+
+  useEffect(() => {
+    // Wait 400ms after any vote change before reordering the grid.
+    // During those 400ms the card stays in place so the pulse/toast/confetti
+    // animate on the exact card the user clicked.
+    const timer = setTimeout(() => setDisplayOrder(sortedIds(books)), 400);
+    return () => clearTimeout(timer);
+  }, [books]);
+
+  // Build the display list: order comes from displayOrder (delayed),
+  // but the book objects themselves come from the live store (instant votes).
+  const sorted = displayOrder
+    .map((id) => books.find((b) => b.id === id))
+    .filter((b): b is Book => b !== undefined);
 
   return (
-    // Outer section fills the full page width with the dark background
     <section style={styles.page}>
       <main style={styles.grid}>
-        {/* rank = position in the sorted leaderboard (1 = most votes) */}
         {sorted.map((book, index) => (
           <VoteCard key={book.id} book={book} rank={index + 1} />
         ))}

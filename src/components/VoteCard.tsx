@@ -54,20 +54,21 @@ export function VoteCard({ book, rank }: VoteCardProps) {
   const [imgError, setImgError]   = useState(false);
   const [hovered, setHovered]     = useState(false);
   const [pulse, setPulse]         = useState<'up' | 'down' | null>(null);
-
-  // Toast message shown briefly after each vote so the user knows it registered
   const [toast, setToast]         = useState<string | null>(null);
-
-  // Confetti particles: each has a unique key, colour, and random position/angle
   const [confetti, setConfetti]   = useState<Confetto[]>([]);
 
+  // Disabled for 500ms after each click — prevents double-click double-votes
+  const [disabled, setDisabled]   = useState(false);
+
   function handleVote(type: 'up' | 'down') {
+    if (disabled) return; // guard: ignore clicks during the cooldown window
+    setDisabled(true);
+    setTimeout(() => setDisabled(false), 500);
+
     if (type === 'up') {
       upvote(book.id);
-      // Launch confetti burst
       setConfetti(makeConfetti());
       setTimeout(() => setConfetti([]), 900);
-      // Show toast
       setToast('✓ Upvoted!');
     } else {
       downvote(book.id);
@@ -201,8 +202,11 @@ export function VoteCard({ book, rank }: VoteCardProps) {
               ...styles.btn,
               backgroundColor: pulse === 'up' ? '#38ef7d' : '#0f3460',
               color: pulse === 'up' ? '#000' : '#fff',
+              opacity: disabled ? 0.6 : 1,
+              cursor: disabled ? 'not-allowed' : 'pointer',
             }}
             onClick={() => handleVote('up')}
+            disabled={disabled}
             aria-label={`Upvote ${book.title}`}
           >
             👍 Upvote
@@ -212,8 +216,11 @@ export function VoteCard({ book, rank }: VoteCardProps) {
               ...styles.btn,
               backgroundColor: pulse === 'down' ? '#e94560' : '#333',
               color: '#fff',
+              opacity: disabled ? 0.6 : 1,
+              cursor: disabled ? 'not-allowed' : 'pointer',
             }}
             onClick={() => handleVote('down')}
+            disabled={disabled}
             aria-label={`Downvote ${book.title}`}
           >
             👎 Downvote
