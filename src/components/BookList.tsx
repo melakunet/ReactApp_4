@@ -20,25 +20,34 @@ export function BookList() {
   const books = useVoteStore((state) => state.books);
 
   return (
-    <main style={styles.grid}>
-      {/* Loop through books — index + 1 gives the rank (store keeps them sorted by votes) */}
-      {books.map((book, index) => (
-        <VoteCard key={book.id} book={book} rank={index + 1} />
-      ))}
-    </main>
+    // Outer section fills the full page width with the dark background
+    <section style={styles.page}>
+      <main style={styles.grid}>
+        {/* Loop through books — index + 1 gives the rank (store keeps them sorted by votes) */}
+        {books.map((book, index) => (
+          <VoteCard key={book.id} book={book} rank={index + 1} />
+        ))}
+      </main>
+    </section>
   );
 }
 
 /** Grid layout so the cards line up nicely on any screen size */
 const styles: Record<string, React.CSSProperties> = {
-  grid: {
-    display: 'grid',
-    // 200px min keeps cards narrow enough to show 4–5 per row on wide screens
-    // but they grow to fill space — each card will be portrait/book-shaped
-    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-    gap: '32px',
-    padding: '40px 36px',
+  // Full-width dark background that fills the whole page below the header
+  page: {
     backgroundColor: '#0a0a1a',
     minHeight: 'calc(100vh - 72px)',
+  },
+  grid: {
+    display: 'grid',
+    // 280px min → 4 cards on wide screens, 3 on medium, 2 on tablet, 1 on mobile
+    // max 340px so cards never stretch too wide and look like proper book covers
+    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 340px))',
+    justifyContent: 'center',  // centre the rows instead of stretching to edges
+    gap: '36px',
+    padding: '40px 36px',
+    maxWidth: '1500px',        // caps grid at ~4 comfortable columns on wide screens
+    margin: '0 auto',          // centre the grid on the page
   },
 };
