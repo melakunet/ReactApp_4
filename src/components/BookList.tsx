@@ -21,9 +21,9 @@ export function BookList() {
 
   return (
     <main style={styles.grid}>
-      {/* Loop through books and render a VoteCard for each one */}
-      {books.map((book) => (
-        <VoteCard key={book.id} book={book} />
+      {/* Loop through books — index + 1 gives the rank (store keeps them sorted by votes) */}
+      {books.map((book, index) => (
+        <VoteCard key={book.id} book={book} rank={index + 1} />
       ))}
     </main>
   );

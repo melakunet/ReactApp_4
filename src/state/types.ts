@@ -9,7 +9,9 @@ export type Book = {
   id: string;
   title: string;
   author: string;
-  votes: number; // starts at 0, goes up or down as users vote
+  votes: number;       // starts at 0, goes up or down as users vote
+  description: string; // one-sentence summary shown on hover
+  coverColor: string;  // gradient used to draw the book cover
 };
 
 /**
