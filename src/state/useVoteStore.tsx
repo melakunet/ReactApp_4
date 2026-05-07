@@ -131,19 +131,11 @@ const initialBooks: Book[] = [
  *   const books  = useVoteStore((state) => state.books);
  *   const upvote = useVoteStore((state) => state.upvote);
  */
-export const useVoteStore = create<VoteState>((set, get) => ({
+export const useVoteStore = create<VoteState>((set) => ({
   // ----- State -----
 
   /** The books array — each book tracks its own vote count */
   books: initialBooks,
-
-  /**
-   * totalVotes — I compute this on the fly by summing all book votes.
-   * get() reads the current state so this always reflects the latest counts.
-   */
-  get totalVotes() {
-    return get().books.reduce((sum, book) => sum + book.votes, 0);
-  },
 
   // ----- Actions -----
 

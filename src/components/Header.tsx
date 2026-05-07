@@ -8,9 +8,12 @@
 import { useVoteStore } from '@/state/useVoteStore';
 
 export function Header() {
-  // Read the total votes and the full books list from the store
-  const totalVotes = useVoteStore((state) => state.totalVotes);
-  const books      = useVoteStore((state) => state.books);
+  // Read the books array — we derive totalVotes from it directly so the
+  // counter always stays in sync (a Zustand getter would get frozen by set())
+  const books = useVoteStore((state) => state.books);
+
+  // Sum all votes live — updates every time the books array changes
+  const totalVotes = books.reduce((sum, book) => sum + book.votes, 0);
 
   // The store keeps books sorted by votes, so index 0 is always the leader
   const topBook = books[0];

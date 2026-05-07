@@ -22,7 +22,6 @@ export type Book = {
  */
 export type VoteState = {
   books: Book[];        // all books with their current vote counts
-  totalVotes: number;  // sum of all votes across every book
   upvote: (id: string) => void;   // add one vote to a book
   downvote: (id: string) => void; // remove one vote from a book (min 0)
 };
